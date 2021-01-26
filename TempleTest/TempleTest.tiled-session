@@ -1,0 +1,193 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "TempleTest.tmx",
+    "expandedProjectPaths": [
+        "D:/data/tilesets",
+        "D:/data/tiled_workspace/temple",
+        "."
+    ],
+    "file.lastUsedOpenFilter": "Alle Dateien (*)",
+    "fileStates": {
+        "D:/data/temple/hyptosis_til-art-batch-2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "D:/data/tiled_workspace/TilesetGrass/TestGarden.tmx": {
+            "scale": 0.9168198529411764,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 240.50526315789472,
+                "y": 256.86616541353385
+            }
+        },
+        "D:/data/tiled_workspace/TilesetGrass/grass_biome.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 1
+        },
+        "D:/data/tiled_workspace/TilesetGrass/map1.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 167.75,
+                "y": 214.75
+            }
+        },
+        "D:/data/tiled_workspace/TilesetGrass/map2.tmx": {
+            "scale": 2.078125,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 120.06015037593984,
+                "y": 120.06015037593984
+            }
+        },
+        "D:/data/tiled_workspace/TilesetGrass/temple_village_forrest.tmx": {
+            "scale": 0.4723011363636363,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 458.393984962406,
+                "y": 509.20902255639106
+            }
+        },
+        "D:/data/tiled_workspace/project1/Artistinfo2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "D:/data/tiled_workspace/project1/Karte1.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 1596,
+                "y": 2464.6666666666665
+            }
+        },
+        "D:/data/tiled_workspace/project1/Outside_A3.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "D:/data/tiled_workspace/project1/Outside_A4.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "D:/data/tiled_workspace/project1/PathAndObjects.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "D:/data/tiled_workspace/project1/house.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "D:/data/tiled_workspace/project1/hyptosis_til-art-batch-2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "D:/data/tiled_workspace/project1/hyptosis_tile-art-batch-1.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "D:/data/tiled_workspace/project1/hyptosis_tile-art-batch-3.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "D:/data/tiled_workspace/project1/hyptosis_tile-art-batch-4.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "D:/data/tiled_workspace/project1/klein.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 491.99999999999994,
+                "y": 508.66666666666663
+            }
+        },
+        "D:/data/tiled_workspace/project1/town_tiles.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "D:/data/tiled_workspace/temple/TestGarden.tmx": {
+            "scale": 0.9168198529411764,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 257.95689223057644,
+                "y": 239.41453634085212
+            }
+        },
+        "D:/data/tiled_workspace/temple/decorations-medieval.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "D:/data/tiled_workspace/temple/fence_medieval.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "D:/data/tiled_workspace/temple/hyptosis_til-art-batch-2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "D:/data/tiled_workspace/temple/hyptosis_tile-art-batch-1.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "D:/data/tiled_workspace/temple/terrain_atlas.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "TempleTest.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 412.5,
+                "y": 687.5
+            }
+        },
+        "decorations-medieval.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "fence_medieval.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "hyptosis_tile-art-batch-1.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "hyptosis_tile-art-batch-3.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.exportedFilePath": "D:/data/tiled_workspace/temple",
+    "last.imagePath": "D:/data/tiled_workspace/TempleTest",
+    "last.worldFilePath": "D:/data/tiled_workspace/TempleTest",
+    "lastUsedTilesetExportFilter": "JSON-Tileset-dateien (*.json)",
+    "loadedWorlds": [
+        "D:/data/tiled_workspace/TempleTest/TempleTestWorld.world"
+    ],
+    "map.height": 32,
+    "map.lastUsedExportFilter": "JSON-Kartendateien (*.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.width": 32,
+    "openFiles": [
+        "TempleTest.tmx"
+    ],
+    "project": "TempleTest.tiled-project",
+    "recentFiles": [
+        "TempleTest.tmx",
+        "hyptosis_tile-art-batch-1.tsx",
+        "hyptosis_tile-art-batch-3.tsx",
+        "fence_medieval.tsx",
+        "decorations-medieval.tsx",
+        "D:/data/tiled_workspace/temple/hyptosis_tile-art-batch-1.tsx",
+        "D:/data/tiled_workspace/temple/TestGarden.tmx",
+        "D:/data/tiled_workspace/temple/terrain_atlas.tsx",
+        "D:/data/tiled_workspace/temple/decorations-medieval.tsx",
+        "D:/data/tiled_workspace/temple/fence_medieval.tsx",
+        "D:/data/tiled_workspace/temple/hyptosis_til-art-batch-2.tsx",
+        "D:/data/temple/hyptosis_til-art-batch-2.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx"
+}

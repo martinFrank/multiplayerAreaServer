@@ -1,0 +1,11 @@
+
+ssh pi@192.168.0.69
+
+scp C:\Users\fmar\IdeaProjects\multiplayerServer\target\multiplayerServer-0.0.1.jar pi@192.168.0.69:~/multiplayerserver
+scp C:\Users\fmar\IdeaProjects\multiplayerServer\TempleTest\ pi@192.168.0.69:~/multiplayerserver/TempleTest
+
+
+java -jar multiplayerserver/multiplayerServer-0.0.1.jar
+
+
+
