@@ -71,10 +71,29 @@
             <version>1.2.17</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.aeonbits.owner/owner -->
+        <dependency>
+            <groupId>org.aeonbits.owner</groupId>
+            <artifactId>owner</artifactId>
+            <version>1.0.4</version>
+        </dependency>
+
+
         <dependency>
             <groupId>org.mapeditor</groupId>
             <artifactId>libtiled</artifactId>
             <version>1.2.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.martinfrank</groupId>
+            <artifactId>multiplayerProtocol</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.konghq</groupId>
+            <artifactId>unirest-java</artifactId>
+            <version>3.11.09</version>
         </dependency>
 
     </dependencies>
@@ -258,7 +277,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.github.martinfrank.multiplayerAreaServer.AreaService</mainClass>
+                                    <mainClass>com.github.martinfrank.multiplayerareaserver.MultiplayerAreaServer</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

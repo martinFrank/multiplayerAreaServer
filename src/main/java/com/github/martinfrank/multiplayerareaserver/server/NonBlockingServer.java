@@ -1,7 +1,7 @@
-package com.github.martinfrank.multiplayerserver.server;
+package com.github.martinfrank.multiplayerareaserver.server;
 
 
-import com.github.martinfrank.multiplayerserver.model.MapChanges;
+import com.github.martinfrank.multiplayerareaserver.model.AreaModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,10 +12,9 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.Calendar;
 import java.util.Iterator;
 
-public class NonBlockingServer implements Runnable {
+public class NonBlockingServer implements Runnable, BroadcastServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NonBlockingServer.class);
 
@@ -26,21 +25,20 @@ public class NonBlockingServer implements Runnable {
     private final ReadHandler readHandler;
 
     public static void main(String[] args) throws IOException {
-        AcceptHandler acceptHandler = new AcceptHandler();
-        ReadHandler readHandler = new ReadHandler();
-        NonBlockingServer server = new NonBlockingServer(10523, acceptHandler, readHandler);
+        NonBlockingServer server = new NonBlockingServer(10523);
         new Thread(server).start();
     }
 
-    public NonBlockingServer(int port, AcceptHandler acceptHandler, ReadHandler readHandler) throws IOException {
+    public NonBlockingServer(int port) throws IOException {
         this.port = port;
-        this.acceptHandler = acceptHandler;
-        this.readHandler = readHandler;
+        acceptHandler = new AcceptHandler();
+        readHandler = new ReadHandler();
         serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.socket().bind(new InetSocketAddress(port));
         serverSocketChannel.configureBlocking(false);
         selector = Selector.open();
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+
     }
 
     @Override
@@ -71,22 +69,30 @@ public class NonBlockingServer implements Runnable {
         }
     }
 
-    private void broadcast(String message) throws IOException {
+    @Override
+    public void broadcast(String message) {
         LOGGER.debug("broadcasting {}", message);
         //FIXME why Buffer?
+
         ByteBuffer broadcastBuffer = ByteBuffer.wrap(message.getBytes());
         for (SelectionKey key : selector.keys()) {
             if (key.isValid() && key.channel() instanceof SocketChannel) {
                 SocketChannel socketChannel = (SocketChannel) key.channel();
-                socketChannel.write(broadcastBuffer);
-                broadcastBuffer.rewind();
+                try {
+                    socketChannel.write(broadcastBuffer);
+                    broadcastBuffer.rewind();
+                } catch (IOException e) {
+                    //FIXME handle exception
+                }
             }
         }
+
     }
 
 
-    public void broadcast(MapChanges mapChanges) throws IOException {
-        String changesAsString = mapChanges.createBroadCastMessage();
-        broadcast(changesAsString);
+    public void setMessageQueue(AreaModel areaModel) {
+        readHandler.setAreaModel(areaModel);
+        acceptHandler.setAreaModel(areaModel);
     }
+
 }

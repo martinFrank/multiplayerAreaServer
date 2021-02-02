@@ -1,4 +1,4 @@
-package com.github.martinfrank.multiplayerserver.server;
+package com.github.martinfrank.multiplayerareaserver.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
