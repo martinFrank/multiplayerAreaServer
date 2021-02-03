@@ -2,6 +2,9 @@ package com.github.martinfrank.multiplayerareaserver.server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.martinfrank.multiplayerareaserver.model.AreaModel;
+import com.github.martinfrank.multiplayerareaserver.MultiplayerAreaServerTicker;
+import com.github.martinfrank.multiplayerprotocol.area.AreaTotal;
+import com.github.martinfrank.multiplayerprotocol.area.MessageJsonFactory;
 import com.github.martinfrank.multiplayerprotocol.area.Monsters;
 import com.github.martinfrank.multiplayerprotocol.area.Message;
 import org.slf4j.Logger;
@@ -22,9 +25,7 @@ public class AcceptHandler{
     //FIXME into configuration
     private final ByteBuffer welcomeBuf = ByteBuffer.wrap("Welcome!\n".getBytes());
 
-    private AreaModel areaModel;
-
-
+    private MultiplayerAreaServerTicker multiplayerAreaServerTicker;
 
     public void accept(Selector selector, SelectionKey key) throws IOException {
         SocketChannel socketChannel = ((ServerSocketChannel) key.channel()).accept();
@@ -37,19 +38,16 @@ public class AcceptHandler{
         socketChannel.register(selector, SelectionKey.OP_READ, address);
 
         //FIXME provide UUID to client
-        Monsters monsters = areaModel.getMonsters();
-        ObjectMapper mapper = new ObjectMapper();
-        String asJsonString = mapper.writeValueAsString(monsters);
-        Message message = new Message(Monsters.class.getName(), asJsonString);
-        String messageAsJson = mapper.writeValueAsString(message);
-        ByteBuffer messageBuffer = ByteBuffer.wrap(messageAsJson.getBytes());
+        AreaTotal areaTotal = multiplayerAreaServerTicker.getAreaTotal();
+        String messageJson = MessageJsonFactory.create(areaTotal);
+        ByteBuffer messageBuffer = ByteBuffer.wrap(messageJson.getBytes());
 
         socketChannel.write(messageBuffer);
         LOGGER.info("accepted connection from {}", address);
     }
 
-    public void setAreaModel(AreaModel areaModel) {
-        this.areaModel = areaModel;
+    public void setAreaModel(MultiplayerAreaServerTicker multiplayerAreaServerTicker) {
+        this.multiplayerAreaServerTicker = multiplayerAreaServerTicker;
     }
 
 

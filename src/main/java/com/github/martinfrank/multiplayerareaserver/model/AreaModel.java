@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class AreaModel extends BaseMessageParser {
+public class AreaModel {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(AreaModel.class);
 
@@ -18,6 +18,7 @@ public class AreaModel extends BaseMessageParser {
     private final Players players;
 
     private final AreaMap areaMap;
+    private final MapChanges mapChanges = new MapChanges();
 
     public AreaModel(AreaMap areaMap) {
         this.areaMap = areaMap;
@@ -32,18 +33,17 @@ public class AreaModel extends BaseMessageParser {
     }
 
     public MapChanges tick() {
-        MapChanges mapChanges = new MapChanges();
         increment = increment + 1;
         if (increment == 8) {
             increment = 0;
             for (Monster monster : monsters.getAll()) {
-                tickMonster(monster, mapChanges);
+                tickMonster(monster);
             }
         }
         return mapChanges;
     }
 
-    private void tickMonster(Monster monster, MapChanges mapChanges) {
+    private void tickMonster(Monster monster) {
         List<Direction> directions = Arrays.asList(Direction.values());
         Collections.shuffle(directions);
 
@@ -52,7 +52,7 @@ public class AreaModel extends BaseMessageParser {
                 Position from = new Position(monster.position);
                 monster.move(dir);
                 Position to = new Position(monster.position);
-                MonsterMovement monsterMovement = new MonsterMovement(monster.entityId.toString(), from, to);
+                MonsterMovement monsterMovement = new MonsterMovement(monster.id, from, to);
                 mapChanges.monsterMovements.add(monsterMovement);
                 break;
             }
@@ -63,11 +63,23 @@ public class AreaModel extends BaseMessageParser {
         return monsters;
     }
 
-    @Override
-    protected void handlePlayerMovementRequest(PlayerMovementRequest playerMovementRequest) {
-        Player player = players.getPlayer(playerMovementRequest.playerId);
-        if(player != null){
+    public Players getPlayers() {
+        return players;
+    }
 
-        }
+    public AreaMap getMap() {
+        return areaMap;
+    }
+
+    public void clearMapChanges() {
+        mapChanges.clear();
+    }
+
+    public MapChanges getMapChanges() {
+        return mapChanges;
+    }
+
+    public AreaTotal getAreaTotal() {
+        return new AreaTotal(monsters, players);
     }
 }

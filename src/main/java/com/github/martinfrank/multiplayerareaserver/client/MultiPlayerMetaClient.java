@@ -2,6 +2,8 @@ package com.github.martinfrank.multiplayerareaserver.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.martinfrank.multiplayerprotocol.meta.AreaServerCredentials;
+import com.github.martinfrank.multiplayerprotocol.meta.PlayerData;
 import com.github.martinfrank.multiplayerprotocol.meta.PlayerMetaData;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
@@ -31,4 +33,20 @@ public class MultiPlayerMetaClient {
                 .asFile(file).getBody();
     }
 
+    public PlayerData getPlayerData(AreaServerCredentials areaServerCredentials) {
+        try {
+            HttpResponse<JsonNode> response = Unirest.post("http://" + server + ":" + port + "/playerdata/player")
+                    .header("accept", "application/json")
+                    .header("content-type", "application/json")
+                    .body(areaServerCredentials)
+                    .asJson();
+
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(response.getBody().toString(), PlayerData.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            //FIXME
+        }
+        return null;
+    }
 }

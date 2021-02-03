@@ -1,4 +1,4 @@
-package com.github.martinfrank.multiplayerareaserver;
+package com.github.martinfrank.multiplayerareaserver.io;
 
 import java.io.*;
 import java.util.zip.ZipEntry;

@@ -1,7 +1,8 @@
 package com.github.martinfrank.multiplayerareaserver.server;
 
 
-import com.github.martinfrank.multiplayerareaserver.model.AreaModel;
+import com.github.martinfrank.multiplayerareaserver.MultiplayerAreaServerTicker;
+import com.github.martinfrank.multiplayerareaserver.client.MultiPlayerMetaClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,10 +25,6 @@ public class NonBlockingServer implements Runnable, BroadcastServer {
     private final AcceptHandler acceptHandler;
     private final ReadHandler readHandler;
 
-    public static void main(String[] args) throws IOException {
-        NonBlockingServer server = new NonBlockingServer(10523);
-        new Thread(server).start();
-    }
 
     public NonBlockingServer(int port) throws IOException {
         this.port = port;
@@ -72,7 +69,6 @@ public class NonBlockingServer implements Runnable, BroadcastServer {
     @Override
     public void broadcast(String message) {
         LOGGER.debug("broadcasting {}", message);
-        //FIXME why Buffer?
 
         ByteBuffer broadcastBuffer = ByteBuffer.wrap(message.getBytes());
         for (SelectionKey key : selector.keys()) {
@@ -89,10 +85,9 @@ public class NonBlockingServer implements Runnable, BroadcastServer {
 
     }
 
-
-    public void setMessageQueue(AreaModel areaModel) {
-        readHandler.setAreaModel(areaModel);
-        acceptHandler.setAreaModel(areaModel);
+    public void setMessageQueue(MultiplayerAreaServerTicker multiplayerAreaServerTicker) {
+        readHandler.setAreaModel(multiplayerAreaServerTicker);
+        acceptHandler.setAreaModel(multiplayerAreaServerTicker);
     }
 
 }

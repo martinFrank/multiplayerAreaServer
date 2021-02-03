@@ -1,6 +1,6 @@
 package com.github.martinfrank.multiplayerareaserver.io;
 
-import com.github.martinfrank.multiplayerareaserver.map.MapProvider;
+import com.github.martinfrank.multiplayerareaserver.model.MapProvider;
 
 import java.io.File;
 import java.net.URISyntaxException;

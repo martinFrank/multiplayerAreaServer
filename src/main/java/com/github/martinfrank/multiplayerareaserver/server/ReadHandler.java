@@ -1,8 +1,7 @@
 package com.github.martinfrank.multiplayerareaserver.server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.martinfrank.multiplayerareaserver.model.AreaModel;
-import com.github.martinfrank.multiplayerprotocol.area.BaseMessageParser;
+import com.github.martinfrank.multiplayerareaserver.MultiplayerAreaServerTicker;
 import com.github.martinfrank.multiplayerprotocol.area.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,12 +15,8 @@ public class ReadHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReadHandler.class);
 
-    private ProtocolMessageParser protocolMessageParser = new ProtocolMessageParser();
-
     private final ObjectMapper objectMapper = new ObjectMapper();
-
-    private AreaModel areaModel;
-
+    private MultiplayerAreaServerTicker multiplayerAreaServerTicker;
     private final ByteBuffer buffer = ByteBuffer.allocate(256);
 
     public void read(SelectionKey key) throws IOException {
@@ -37,8 +32,7 @@ public class ReadHandler {
             stringBuilder.append(new String(bytes));
             buffer.clear();
         }
-        //FIXME - wir schicken keine Strings, wir schicken datapackete - byte[] orientiert
-        //ABER: vorerst schicken wir JSon  Strings, damit wir die Datagramme leichter lesen/schreiben können
+
         String message;
         if (bytesRead < 0) {
             message = key.attachment() + " left the server.\n";
@@ -47,15 +41,13 @@ public class ReadHandler {
             String raw = stringBuilder.toString();
             message = key.attachment() + ": " + raw;
             Message msg = objectMapper.readValue(raw, Message.class);
-            areaModel.parse(msg);
-            protocolMessageParser.parse(msg);
-
+            multiplayerAreaServerTicker.parse(msg);
         }
         LOGGER.debug("read: {}", message);
 
     }
 
-    public void setAreaModel(AreaModel areaMap) {
-        this.areaModel = areaMap;
+    public void setAreaModel( MultiplayerAreaServerTicker multiplayerAreaServerTicker) {
+        this.multiplayerAreaServerTicker = multiplayerAreaServerTicker;
     }
 }
