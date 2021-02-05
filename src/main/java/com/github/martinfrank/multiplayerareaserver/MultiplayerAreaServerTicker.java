@@ -1,14 +1,15 @@
 package com.github.martinfrank.multiplayerareaserver;
 
 import com.github.martinfrank.multiplayerareaserver.client.MultiPlayerMetaClient;
-import com.github.martinfrank.multiplayerprotocol.area.*;
 import com.github.martinfrank.multiplayerareaserver.model.AreaModel;
 import com.github.martinfrank.multiplayerareaserver.server.AreaMessageParser;
 import com.github.martinfrank.multiplayerareaserver.server.BroadcastServer;
+import com.github.martinfrank.multiplayerprotocol.area.*;
 import com.github.martinfrank.multiplayerprotocol.meta.PlayerData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.channels.SelectionKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,12 +22,14 @@ public class MultiplayerAreaServerTicker implements Runnable, MessageParser {
     private BroadcastServer broadcastServer;
     private final List<Message> inputMessages;
     private final List<Message> messageBuffer;
+    private final List<SelectionKey> registeredConections;
 
     private final AreaMessageParser areaMessageParser;
 
     public MultiplayerAreaServerTicker(int delayInMillis, ServerConfig serverConfig, AreaModel areaModel, MultiPlayerMetaClient metaClient) {
         this.delayInMillis = delayInMillis;
         this.areaModel = areaModel;
+        registeredConections = new ArrayList<>();
 
         inputMessages = new ArrayList<>();
         messageBuffer = new ArrayList<>();
@@ -94,5 +97,9 @@ public class MultiplayerAreaServerTicker implements Runnable, MessageParser {
         String messageJson = MessageJsonFactory.create(player);
         broadcastServer.broadcast(messageJson);
 
+    }
+
+    public void registerKey(SelectionKey key) {
+        registeredConections.add(key);
     }
 }

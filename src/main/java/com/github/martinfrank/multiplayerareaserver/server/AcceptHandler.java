@@ -1,12 +1,8 @@
 package com.github.martinfrank.multiplayerareaserver.server;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.martinfrank.multiplayerareaserver.model.AreaModel;
 import com.github.martinfrank.multiplayerareaserver.MultiplayerAreaServerTicker;
 import com.github.martinfrank.multiplayerprotocol.area.AreaTotal;
 import com.github.martinfrank.multiplayerprotocol.area.MessageJsonFactory;
-import com.github.martinfrank.multiplayerprotocol.area.Monsters;
-import com.github.martinfrank.multiplayerprotocol.area.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,11 +12,13 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class AcceptHandler{
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AcceptHandler.class);
+    private final AtomicLong counter = new AtomicLong();
 
     //FIXME into configuration
     private final ByteBuffer welcomeBuf = ByteBuffer.wrap("Welcome!\n".getBytes());
@@ -32,8 +30,9 @@ public class AcceptHandler{
         String address = socketChannel.socket().getInetAddress() + ":" + socketChannel.socket().getPort();
 
         //FIXME: add id to key
-        //key.attach(UUID.randomUUID());
-        key.attach(socketChannel);
+        long id = counter.incrementAndGet();
+        key.attach(id);
+        multiplayerAreaServerTicker.registerKey(key);
         socketChannel.configureBlocking(false);
         socketChannel.register(selector, SelectionKey.OP_READ, address);
 

@@ -17,7 +17,7 @@ public class ReadHandler {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private MultiplayerAreaServerTicker multiplayerAreaServerTicker;
-    private final ByteBuffer buffer = ByteBuffer.allocate(256);
+    private final ByteBuffer buffer = ByteBuffer.allocate(1024);
 
     public void read(SelectionKey key) throws IOException {
         SocketChannel socketChannel = (SocketChannel) key.channel();
