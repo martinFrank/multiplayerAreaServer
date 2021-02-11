@@ -1,12 +1,13 @@
 package com.github.martinfrank.multiplayerareaserver.model;
 
 import com.github.martinfrank.multiplayerprotocol.area.*;
-import com.github.martinfrank.multiplayerprotocol.area.MonsterMovement;
-import com.github.martinfrank.multiplayerprotocol.area.MapChanges;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 public class AreaModel {
 
@@ -28,7 +29,7 @@ public class AreaModel {
         players = new Players();
 
         String name = "wolf";
-        Monster monster = new Monster(UUID.randomUUID().toString(), UUID.randomUUID().toString(), new Position(5,5));
+        Monster monster = new Monster(UUID.randomUUID().toString(), UUID.randomUUID().toString(), new Position(5, 5), true);
         monsters.monsters.add(monster);
     }
 

@@ -92,7 +92,7 @@ public class MultiplayerAreaServerTicker implements Runnable, MessageParser {
     }
 
     public void addNewPlayer(PlayerData playerData) {
-        Player player = new Player(playerData);
+        Player player = new Player(playerData, true);
         areaModel.getPlayers().players.add(player);
         String messageJson = MessageJsonFactory.create(player);
         broadcastServer.broadcast(messageJson);
