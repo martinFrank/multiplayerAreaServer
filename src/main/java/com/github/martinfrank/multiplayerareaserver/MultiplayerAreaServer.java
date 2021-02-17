@@ -1,8 +1,8 @@
 package com.github.martinfrank.multiplayerareaserver;
 
 import com.github.martinfrank.multiplayerareaserver.client.MultiPlayerMetaClient;
-import com.github.martinfrank.multiplayerareaserver.model.MapProvider;
 import com.github.martinfrank.multiplayerareaserver.model.AreaModel;
+import com.github.martinfrank.multiplayerareaserver.model.MapProvider;
 import com.github.martinfrank.multiplayerareaserver.server.NonBlockingServer;
 import org.aeonbits.owner.ConfigFactory;
 import org.slf4j.Logger;
@@ -28,7 +28,7 @@ public class MultiplayerAreaServer {
         nonBlockingServer = new NonBlockingServer(10523); //FIXME magic Number!
         multiplayerAreaServerTicker = new MultiplayerAreaServerTicker(250, serverConfig, areaModel, metaClient); //FIXME magic Number!
 
-        nonBlockingServer.setMessageQueue(multiplayerAreaServerTicker);
+        nonBlockingServer.setAreaServerTicker(multiplayerAreaServerTicker);
         multiplayerAreaServerTicker.setBroadcastServer(nonBlockingServer);
     }
 

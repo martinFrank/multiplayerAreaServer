@@ -99,7 +99,14 @@ public class MultiplayerAreaServerTicker implements Runnable, MessageParser {
 
     }
 
-    public void registerKey(SelectionKey key) {
+    public void register(SelectionKey key) {
         registeredConections.add(key);
+
+        String messageJson = MessageJsonFactory.create(getAreaTotal());
+        broadcastServer.singlecast(messageJson, key);
+    }
+
+    public void deregister(SelectionKey key) {
+        registeredConections.remove(key);
     }
 }

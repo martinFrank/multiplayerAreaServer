@@ -27,6 +27,7 @@ public class AreaMessageParser extends BaseMessageParser {
         this.serverConfig = serverConfig;
         this.metaClient = metaClient;
 
+        //FIXME from config
         areaServerCredentials = new AreaServerCredentials();
         areaServerCredentials.areaId = "templeTest";
         areaServerCredentials.user = "templeTest1";

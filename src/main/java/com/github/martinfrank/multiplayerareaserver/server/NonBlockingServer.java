@@ -1,93 +1,83 @@
 package com.github.martinfrank.multiplayerareaserver.server;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.martinfrank.multiplayerareaserver.MultiplayerAreaServerTicker;
-import com.github.martinfrank.multiplayerareaserver.client.MultiPlayerMetaClient;
+import com.github.martinfrank.multiplayerprotocol.area.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicLong;
 
-public class NonBlockingServer implements Runnable, BroadcastServer {
+public class NonBlockingServer extends BasicNonBlockingServer {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ByteBuffer buffer = ByteBuffer.allocate(1024);
+    private MultiplayerAreaServerTicker multiplayerAreaServerTicker;
+    private final AtomicLong counter = new AtomicLong();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NonBlockingServer.class);
 
-    private final int port;
-    private final ServerSocketChannel serverSocketChannel;
-    private final Selector selector;
-    private final AcceptHandler acceptHandler;
-    private final ReadHandler readHandler;
-
 
     public NonBlockingServer(int port) throws IOException {
-        this.port = port;
-        acceptHandler = new AcceptHandler();
-        readHandler = new ReadHandler();
-        serverSocketChannel = ServerSocketChannel.open();
-        serverSocketChannel.socket().bind(new InetSocketAddress(port));
-        serverSocketChannel.configureBlocking(false);
-        selector = Selector.open();
-        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-
+        super(port);
     }
 
-    @Override
-    public void run() {
-        try {
-            LOGGER.info("Starting nio nonblocking server on port {}", port);
-            Iterator<SelectionKey> selectionKeyIterator;
-            SelectionKey key;
+    public void read(SelectionKey key) throws IOException {
+        SocketChannel socketChannel = (SocketChannel) key.channel();
+        StringBuilder stringBuilder = new StringBuilder();
 
-            while (serverSocketChannel.isOpen()) {
-                selector.select();
-                selectionKeyIterator = selector.selectedKeys().iterator();
-                while (selectionKeyIterator.hasNext()) {
-                    key = selectionKeyIterator.next();
-                    selectionKeyIterator.remove();
-
-                    if (key.isAcceptable()) {
-                        acceptHandler.accept(selector, key);
-                    }
-                    if (key.isReadable()) {
-                        readHandler.read(key);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            LOGGER.error("IOException, server of port {} terminating. Stack trace:", port);
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void broadcast(String message) {
-        LOGGER.debug("broadcasting {}", message);
-
-        ByteBuffer broadcastBuffer = ByteBuffer.wrap(message.getBytes());
-        for (SelectionKey key : selector.keys()) {
-            if (key.isValid() && key.channel() instanceof SocketChannel) {
-                SocketChannel socketChannel = (SocketChannel) key.channel();
-                try {
-                    socketChannel.write(broadcastBuffer);
-                    broadcastBuffer.rewind();
-                } catch (IOException e) {
-                    //FIXME handle exception
-                }
-            }
+        buffer.clear();
+        int bytesRead;
+        while ((bytesRead = socketChannel.read(buffer)) > 0) {
+            buffer.flip();
+            byte[] bytes = new byte[buffer.limit()];
+            buffer.get(bytes);
+            stringBuilder.append(new String(bytes));
+            buffer.clear();
         }
 
+        String message;
+        if (bytesRead < 0) {
+            message = key.attachment() + " left the server.\n";
+            socketChannel.close();
+            multiplayerAreaServerTicker.deregister(key);
+        } else {
+            String raw = stringBuilder.toString();
+            message = key.attachment() + ": " + raw;
+            Message msg = objectMapper.readValue(raw, Message.class);
+            multiplayerAreaServerTicker.parse(msg);
+        }
+        LOGGER.debug("read: {}", message);
     }
 
-    public void setMessageQueue(MultiplayerAreaServerTicker multiplayerAreaServerTicker) {
-        readHandler.setAreaModel(multiplayerAreaServerTicker);
-        acceptHandler.setAreaModel(multiplayerAreaServerTicker);
+    public void accept(Selector selector, SelectionKey key) throws IOException {
+        SocketChannel socketChannel = ((ServerSocketChannel) key.channel()).accept();
+        String address = socketChannel.socket().getInetAddress() + ":" + socketChannel.socket().getPort();
+
+        IdAttachment idAttachment = new IdAttachment(address, counter.incrementAndGet());
+        multiplayerAreaServerTicker.register(key);
+        socketChannel.configureBlocking(false);
+        socketChannel.register(selector, SelectionKey.OP_READ, idAttachment);
+
+
+//        //FIXME goes to AreaTicker
+//        AreaTotal areaTotal = multiplayerAreaServerTicker.getAreaTotal();
+//        String messageJson = MessageJsonFactory.create(areaTotal);
+//        ByteBuffer messageBuffer = ByteBuffer.wrap(messageJson.getBytes());
+//
+//        socketChannel.write(messageBuffer);
+        LOGGER.info("accepted connection from {}", address);
+    }
+
+    public void setAreaServerTicker(MultiplayerAreaServerTicker multiplayerAreaServerTicker) {
+        this.multiplayerAreaServerTicker = multiplayerAreaServerTicker;
     }
 
 }
