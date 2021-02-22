@@ -4,35 +4,37 @@ import com.github.martinfrank.multiplayerareaserver.client.MultiPlayerMetaClient
 import com.github.martinfrank.multiplayerareaserver.model.AreaModel;
 import com.github.martinfrank.multiplayerareaserver.server.AreaMessageParser;
 import com.github.martinfrank.multiplayerareaserver.server.BroadcastServer;
+import com.github.martinfrank.multiplayerareaserver.server.SelectionKeyId;
 import com.github.martinfrank.multiplayerprotocol.area.*;
 import com.github.martinfrank.multiplayerprotocol.meta.PlayerData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.channels.SelectionKey;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class MultiplayerAreaServerTicker implements Runnable, MessageParser {
+public class MultiplayerAreaServerTicker implements Runnable, MessageParser<SelectionKeyId> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MultiplayerAreaServerTicker.class);
 
     private final int delayInMillis;
     private final AreaModel areaModel;
     private BroadcastServer broadcastServer;
-    private final List<Message> inputMessages;
-    private final List<Message> messageBuffer;
-    private final List<SelectionKey> registeredConections;
+    private final List<Message<SelectionKeyId>> inputMessages;
+    private final List<Message<SelectionKeyId>> messageBuffer;
+    private final Map<SelectionKeyId, Player> players;
 
     private final AreaMessageParser areaMessageParser;
 
     public MultiplayerAreaServerTicker(int delayInMillis, ServerConfig serverConfig, AreaModel areaModel, MultiPlayerMetaClient metaClient) {
         this.delayInMillis = delayInMillis;
         this.areaModel = areaModel;
-        registeredConections = new ArrayList<>();
 
         inputMessages = new ArrayList<>();
         messageBuffer = new ArrayList<>();
+        players = new HashMap<>();
 
         areaMessageParser = new AreaMessageParser(this, areaModel, serverConfig, metaClient);
     }
@@ -59,7 +61,7 @@ public class MultiplayerAreaServerTicker implements Runnable, MessageParser {
         inputMessages.removeAll(messageBuffer);
     }
 
-    private void processInput(Message input) {
+    private void processInput(Message<SelectionKeyId> input) {
         areaMessageParser.parse(input);
     }
 
@@ -78,7 +80,7 @@ public class MultiplayerAreaServerTicker implements Runnable, MessageParser {
     }
 
     @Override
-    public void parse(Message message) {
+    public void parse(Message<SelectionKeyId> message) {
         inputMessages.add(message);
     }
 
@@ -91,22 +93,15 @@ public class MultiplayerAreaServerTicker implements Runnable, MessageParser {
         return areaModel.getAreaTotal();
     }
 
-    public void addNewPlayer(PlayerData playerData) {
+    public void addNewPlayer(PlayerData playerData, SelectionKeyId keyId) {
         Player player = new Player(playerData, true);
         areaModel.getPlayers().players.add(player);
         String messageJson = MessageJsonFactory.create(player);
         broadcastServer.broadcast(messageJson);
-
     }
 
-    public void register(SelectionKey key) {
-        registeredConections.add(key);
-
-        String messageJson = MessageJsonFactory.create(getAreaTotal());
-        broadcastServer.singlecast(messageJson, key);
+    public void deregister(SelectionKeyId selectionKeyId) {
+        LOGGER.info("handle registration connection from {}", selectionKeyId);
     }
 
-    public void deregister(SelectionKey key) {
-        registeredConections.remove(key);
-    }
 }

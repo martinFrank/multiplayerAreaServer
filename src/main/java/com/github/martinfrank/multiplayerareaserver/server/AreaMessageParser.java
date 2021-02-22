@@ -7,10 +7,11 @@ import com.github.martinfrank.multiplayerareaserver.model.AreaModel;
 import com.github.martinfrank.multiplayerprotocol.area.*;
 import com.github.martinfrank.multiplayerprotocol.meta.AreaServerCredentials;
 import com.github.martinfrank.multiplayerprotocol.meta.PlayerData;
+import com.github.martinfrank.multiplayerprotocol.meta.PlayerMetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AreaMessageParser extends BaseMessageParser {
+public class AreaMessageParser extends BaseMessageParser<SelectionKeyId> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AreaMessageParser.class);
 
@@ -36,7 +37,7 @@ public class AreaMessageParser extends BaseMessageParser {
 
 
     @Override
-    public void handlePlayerMovementRequest(PlayerMovementRequest playerMovementRequest) {
+    public void handlePlayerMovementRequest(PlayerMovementRequest playerMovementRequest, SelectionKeyId keyId) {
         Player player = areaModel.getPlayers().getPlayer(playerMovementRequest.playerId);
         LOGGER.debug("player is present? player: {}", player);
         Direction direction = playerMovementRequest.direction;
@@ -53,15 +54,20 @@ public class AreaMessageParser extends BaseMessageParser {
 
 
     @Override
-    public void handlePlayerRegistration(PlayerRegistration playerRegistration) {
+    public void handlePlayerRegistration(PlayerRegistration playerRegistration, SelectionKeyId keyId) {
         String id = playerRegistration.playerId;
-        LOGGER.debug("handlePlayerRegistration {}", playerRegistration);
-        LOGGER.debug("then i should start a backup thread that backups the players position all 20 seconds or so");
         AreaServerCredentials credentials = new AreaServerCredentials(areaServerCredentials, id);
-        PlayerData playerData = metaClient.getPlayerData(credentials);
-        LOGGER.debug("i did get Player data from a Player: {}", playerData);
-        LOGGER.warn("PLAYER IS NOT VALIDATED YET - SIMPLY ADDED");
-        ticker.addNewPlayer(playerData);
+        PlayerMetaData playerMetaData = metaClient.getPlayerMetaData(credentials);
+
+        //prüfung ob schon online
+        if(!playerMetaData.online){
+            PlayerData playerData = metaClient.getPlayerData(credentials);
+            ticker.addNewPlayer(playerData, keyId);
+        }else{
+            //Cry out loud: player already online!!!
+        }
+
+
     }
 
 }

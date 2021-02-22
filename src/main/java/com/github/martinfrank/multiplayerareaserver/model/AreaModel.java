@@ -81,6 +81,8 @@ public class AreaModel {
     }
 
     public AreaTotal getAreaTotal() {
-        return new AreaTotal(monsters, players);
+        //FIXME
+        return new AreaTotal(monsters, null);
+//        return new AreaTotal(monsters, players);
     }
 }

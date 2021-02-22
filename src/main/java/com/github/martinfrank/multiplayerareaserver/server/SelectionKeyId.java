@@ -1,11 +1,11 @@
 package com.github.martinfrank.multiplayerareaserver.server;
 
-public class IdAttachment {
+public class SelectionKeyId {
 
     public final String adress;
     public final long id;
 
-    public IdAttachment(String adress, long id) {
+    public SelectionKeyId(String adress, long id) {
         this.adress = adress;
         this.id = id;
     }
@@ -19,8 +19,8 @@ public class IdAttachment {
     }
 
     public boolean sameId(Object object) {
-        if (object instanceof IdAttachment) {
-            IdAttachment attachment = (IdAttachment) object;
+        if (object instanceof SelectionKeyId) {
+            SelectionKeyId attachment = (SelectionKeyId) object;
             return attachment.id == id;
         }
         return false;
